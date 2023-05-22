@@ -1,0 +1,11 @@
+OBJECTS = \
+$(OBJECTS_DIR)/viscosityModel.o\
+$(OBJECTS_DIR)/newViscosityModel.o\
+$(OBJECTS_DIR)/Newtonian.o\
+$(OBJECTS_DIR)/powerLaw.o\
+$(OBJECTS_DIR)/CrossPowerLaw.o\
+$(OBJECTS_DIR)/BirdCarreau.o\
+$(OBJECTS_DIR)/HerschelBulkley.o\
+$(OBJECTS_DIR)/freeSurface.o\
+$(OBJECTS_DIR)/transportModel.o\
+$(OBJECTS_DIR)/laserTwoPhaseMixture.o

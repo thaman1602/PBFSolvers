@@ -1,0 +1,150 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     4.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    rho
+    {}
+    pcorr
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-10;
+        relTol          0;
+    }
+
+    pd
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-07;
+        relTol          0.05;
+    }
+
+    pdFinal
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-07;
+        relTol          0;
+    }
+
+    U
+    {
+        solver          BiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-06;
+        relTol          0;
+    }
+}
+PISO
+{
+    cAlpha          1;
+}
+PIMPLE
+{
+    momentumPredictor yes;
+    nOuterCorrectors 5;
+    nCorrectors     4;
+    nNonOrthogonalCorrectors 0;
+    nAlphaCorr      1;
+    nAlphaSubCycles 2;
+    pdRefValue 0;
+    pdRefCell 0;
+    pRefValue 0;
+
+   residualControl
+	          {
+			                 "U"
+						                {
+								                               tolerance 1e-8;
+										                               relTol 0;
+												                }
+			                  "pd"
+				                 {
+				                               tolerance 1e-8;
+				                              relTol 0;
+			                       }
+                    "rho"
+                {
+                        tolerance 1e-8;
+                        relTol 0;
+                }
+                "temperatureTol"
+                    {
+                            tolerance 1e-8;
+                        relTol 0;
+                }
+                "alternativeTol"
+	                {
+		                        tolerance 1e-8;
+			                        relTol 0;
+				                }
+                "absTol"
+	                {
+		                        tolerance 1e-8;
+			                        relTol 0;
+				                }
+                "gTTol"
+	                {
+		                        tolerance 1e-8;
+			                        relTol 0;
+				                }		
+    
+		}
+
+   Controls
+   {
+   	relaxCorr 0.5;
+   }
+
+   relaxationFactors
+   {
+   	fields
+	{
+		pd 0.3;
+	}
+	equations
+	{
+		U 0.7;
+		T 0.8;
+	}
+   }
+}   
+isoAdvector
+{
+    // Note: use full Crank-Nicolson when topo changes are not occuring,
+    // otherwise the code resorts to Euler implicit
+    CrankNicolsonCoeff 0.5;
+
+    // Euler implicit
+    //CrankNicolsonCoeff 1;
+
+    gradAlphaNormal true;
+
+    alphaFluxTolerance 1e-6; // 10*SMALL by default
+
+    // Determines which cells are classified as surface cells
+    vof2IsoTol         1e-6; // 1e-8 by default
+
+    clipAlphaTol 1e-6;
+    nAlphaBounds 1;
+    snapAlpha   false; // true
+}
+
+
+// ************************************************************************* //

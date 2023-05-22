@@ -1,0 +1,92 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     4.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application icoFoam;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         5;
+
+deltaT          5e-4;
+
+writeControl    adjustableRunTime;
+
+writeInterval   1e-1;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression uncompressed;
+
+timeFormat      general;
+
+timePrecision   6;
+
+adjustTimeStep  no;
+
+maxCo           0.1;
+
+maxAlphaCo      0.1;
+
+maxDeltaT       1e-5;
+
+functions
+{
+   // Writes alpha1 = 0.5 isoSurface and velocity field sampled at it
+    surfaceSampling
+      {
+        type surfaces;
+
+        functionObjectLibs ("libsampling.so");
+        enabled         true;
+        outputControl   outputTime;
+        outputInterval  10;
+        interpolationScheme cellPoint;
+        surfaceFormat raw;
+
+        // Fields to be sampled
+        fields
+	  (
+            alpha.liquid
+	   );
+
+        surfaces
+	  (
+            alpha0p5
+            {
+	      // Iso surface for constant values.
+	      // Triangles guaranteed not to cross cells.
+	      // isoSurfaceCell seems to be smoother than isoSurface
+	      type            isoSurfaceCell;
+	      isoField        alpha.liquid;
+	      isoValue        0.5;
+	      interpolate     true; 
+	      regularise      false;       // Do not simplify 
+            }
+	   );
+      }
+
+}
+
+// ************************************************************************* //
+

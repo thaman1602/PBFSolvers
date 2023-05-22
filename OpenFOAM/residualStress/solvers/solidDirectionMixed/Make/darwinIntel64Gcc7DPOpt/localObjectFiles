@@ -1,0 +1,2 @@
+LOCAL_OBJECTS = \
+solidDirectionMixedFvPatchVectorFieldS4F.o

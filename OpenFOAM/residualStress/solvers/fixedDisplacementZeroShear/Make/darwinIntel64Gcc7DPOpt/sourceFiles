@@ -1,0 +1,2 @@
+SOURCE = \
+fixedDisplacementZeroShearFvPatchVectorFieldS4F.C

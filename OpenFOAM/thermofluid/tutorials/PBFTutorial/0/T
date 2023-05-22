@@ -1,0 +1,81 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     4.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      T;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 298.0;
+
+boundaryField
+{
+    leftWall
+    {
+	type		zeroGradient;
+        //type            multiPhaseThermalConvection;
+	//thermalConductivityName		kEff;
+	//hc		uniform 80;
+	//Tinf	298;
+	//value 	uniform 298;
+    }
+    rightWall
+    {
+	type		zeroGradient;
+	//type            multiPhaseThermalConvection;
+	//thermalConductivityName		kEff;
+	//hc		uniform 80;
+	//Tinf	298;
+	//value 	uniform 298;
+    }
+    topWall
+    {
+	type		zeroGradient;
+	//type 		multiPhaseThermalConvection;
+	//thermalConductivityName		kEff;
+	//hc		uniform 80;
+	//Tinf		298;
+	//value		uniform 298;
+    }
+    bottomWall
+    {
+	type		zeroGradient;
+    }
+    front
+    {
+	type		zeroGradient;
+        //type            multiPhaseThermalConvection;
+	//thermalConductivityName		kEff;
+	//hc		uniform 80;
+	//Tinf	298;
+	//value	uniform 298;
+    }
+    back
+    {
+	type		zeroGradient;
+        //type            multiPhaseThermalConvection;
+	//thermalConductivityName		kEff;
+	//hc		uniform 80;
+	//Tinf	298;
+	//value	uniform 298;
+    }
+ 
+    solidInterface
+    {
+	type		zeroGradient;
+    }
+}
+
+
+// ************************************************************************* //

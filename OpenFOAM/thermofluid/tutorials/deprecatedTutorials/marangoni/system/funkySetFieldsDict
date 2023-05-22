@@ -1,0 +1,24 @@
+FoamFile
+{
+    version         2.0;
+    format          ascii;
+
+    root            "~/foam/gowthaman-4.0/run/maragoni/";
+    case            "maragoni";
+    instance        "system";
+    local           "";
+
+    class           dictionary;
+    object          funkySetFieldsDict;
+}
+
+expressions
+(
+	gradT
+	{
+		field T;
+		expression "1.0-pos().x";
+		dimension [0 0 0 1 0 0 0];
+		create true;
+	}
+);

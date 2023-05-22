@@ -1,0 +1,2 @@
+LOCAL_OBJECTS = \
+fixedDisplacementZeroShearFvPatchVectorFieldS4F.o

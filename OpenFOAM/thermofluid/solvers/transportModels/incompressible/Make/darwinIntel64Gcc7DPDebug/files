@@ -1,0 +1,18 @@
+# 1 "files"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "files"
+viscosityModels/viscosityModel/viscosityModel.C
+viscosityModels/viscosityModel/newViscosityModel.C
+viscosityModels/Newtonian/Newtonian.C
+viscosityModels/powerLaw/powerLaw.C
+viscosityModels/CrossPowerLaw/CrossPowerLaw.C
+viscosityModels/BirdCarreau/BirdCarreau.C
+viscosityModels/HerschelBulkley/HerschelBulkley.C
+viscosityModels/freeSurface/freeSurface.C
+
+transportModel/transportModel.C
+
+laserThreePhaseMixture/laserThreePhaseMixture.C
+
+LIB = $(FOAM_USER_LIBBIN)/liblaserTransportModels

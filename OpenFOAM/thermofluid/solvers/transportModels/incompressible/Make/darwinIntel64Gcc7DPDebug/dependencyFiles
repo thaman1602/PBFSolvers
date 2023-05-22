@@ -1,0 +1,11 @@
+DEPENDENCIES = \
+viscosityModels/viscosityModel/viscosityModel.dep\
+viscosityModels/viscosityModel/newViscosityModel.dep\
+viscosityModels/Newtonian/Newtonian.dep\
+viscosityModels/powerLaw/powerLaw.dep\
+viscosityModels/CrossPowerLaw/CrossPowerLaw.dep\
+viscosityModels/BirdCarreau/BirdCarreau.dep\
+viscosityModels/HerschelBulkley/HerschelBulkley.dep\
+viscosityModels/freeSurface/freeSurface.dep\
+transportModel/transportModel.dep\
+laserThreePhaseMixture/laserThreePhaseMixture.dep

@@ -1,0 +1,12 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # run from this directory
+
+(cd elastoPlasticityLaw && wmake libso)
+
+(cd fixedDisplacementZeroShear && wmake libso)
+
+(cd traction && wmake libso)
+
+(cd TResIntegrator && wmake)
+
+(cd residualStressFoam && wmake)

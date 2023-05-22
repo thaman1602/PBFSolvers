@@ -1,0 +1,4 @@
+OBJECTS = \
+$(OBJECTS_DIR)/isoCutCell.o\
+$(OBJECTS_DIR)/isoCutFace.o\
+$(OBJECTS_DIR)/isoAdvection.o

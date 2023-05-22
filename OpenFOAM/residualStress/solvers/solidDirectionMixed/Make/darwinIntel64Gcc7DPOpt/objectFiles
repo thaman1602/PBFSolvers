@@ -1,0 +1,2 @@
+OBJECTS = \
+$(OBJECTS_DIR)/solidDirectionMixedFvPatchVectorFieldS4F.o

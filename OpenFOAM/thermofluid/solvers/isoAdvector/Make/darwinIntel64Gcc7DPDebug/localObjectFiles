@@ -1,0 +1,4 @@
+LOCAL_OBJECTS = \
+isoCutCell.o\
+isoCutFace.o\
+isoAdvection.o

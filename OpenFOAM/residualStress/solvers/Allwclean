@@ -1,0 +1,12 @@
+#!/bin/bash
+cd ${0%/*} || exit 1    # run from this directory
+
+(cd elastoPlasticityLaw && wclean lib)
+
+(cd fixedDisplacementZeroShear && wclean lib)
+
+(cd traction && wclean lib)
+
+(cd TResIntegrator && wclean)
+
+(cd residualStressFoam && wclean)

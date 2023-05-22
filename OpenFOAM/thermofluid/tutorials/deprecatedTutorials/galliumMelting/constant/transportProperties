@@ -1,0 +1,43 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     4.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      transportProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+MaterialProperties
+{
+    transportModel  Newtonian;
+    nu              nu [ 0 2 -1 0 0 0 0 ] 2.9706e-7;
+    rhoS            6.093e3;
+    cpS		    381.5;
+    kS		    32;
+
+    rhoL            6.093e3;
+    cpL		    381.5;
+    kL		    32;
+}
+
+GasProperties
+{
+    transportModel  Newtonian;
+    nu              nu [ 0 2 -1 0 0 0 0 ] 1e-10;
+    rhoG            1e-10;
+    cpG		    1e-10;
+    kG		    1e-10;
+}
+
+sigma           sigma [ 1 0 -2 0 0 0 0 ] 0.07;
+STgrad		STgrad [1 0 -2 -1 0 0 0] 0.0;
+
+// ************************************************************************* //

@@ -1,0 +1,80 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     4.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      T;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 293;
+
+boundaryField
+{
+    topWall
+    {
+        //type groovyBC;
+        //variables "k=19.25;h_conv=50;sig_rad=5.67e-8;emmi=1;Tinf=293;h_rad=sig_rad*emmi*(pow(T,2)+pow(Tinf,2))*(T+Tinf);";
+        //valueExpression "Tinf";
+        //gradientExpression "0";
+        //fractionExpression "1/(1+k/(mag(delta())*(h_conv+h_rad)))";
+        //value uniform 293;
+
+        type            multiPhaseThermalConvection;
+	thermalConductivityName		kEff;
+	Power	1967;
+	Radius	0.468e-3;
+	em	1;
+	x	0;
+	hc		uniform 80;
+	Tinf	298;
+	value 	uniform 298;
+    }
+    rightWall
+    {
+        //type groovyBC;
+        //variables "k=19.25;h_conv=50;sig_rad=5.67e-8;emmi=1;Tinf=293;h_rad=sig_rad*emmi*(pow(T,2)+pow(Tinf,2))*(T+Tinf);";
+        //valueExpression "Tinf";
+        //gradientExpression "0";
+        //fractionExpression "1/(1+k/(mag(delta())*(h_conv+h_rad)))";
+        //value uniform 293;
+
+        type            multiPhaseThermalConvection;
+	thermalConductivityName		kEff;
+	Power	1967;
+	Radius	0.468e-3;
+	em	1;
+	x	0;
+	hc		uniform 80;
+	Tinf	298;
+	value 	uniform 298;
+    }
+    leftWall
+    {
+        type            symmetryPlane;
+    }
+    solidInterface
+    {
+        type            zeroGradient;
+    }
+    bottomWall
+    {
+        type            zeroGradient;
+    }
+    frontAndBack
+    {
+        type            empty;
+    }
+}
+
+// ************************************************************************* //

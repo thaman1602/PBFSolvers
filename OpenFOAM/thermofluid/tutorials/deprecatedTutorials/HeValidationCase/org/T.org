@@ -1,0 +1,58 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     4.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      T;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    topWall
+    {
+        /*type            fixedGradient;
+	gradient	uniform -2000;*/
+
+	type groovyBC;
+ 	variables "k=0.4;alpha=100;Tinf=0; f=1/(1+k/(alpha*mag(delta())));";
+ 	valueExpression "Tinf";
+	gradientExpression "0";
+ 	fractionExpression "1/(1+k/(alpha*mag(delta())))";
+ 	value uniform 0;
+    }
+    rightWall
+    {
+        type            zeroGradient;
+    }
+    leftWall
+    {
+        type            zeroGradient;
+    }
+    solidInterface
+    {
+        type            zeroGradient;
+    }
+    bottomWall
+    {
+        type            zeroGradient;
+    }
+    frontAndBack
+    {
+        type            empty;
+    }
+}
+
+// ************************************************************************* //

@@ -1,0 +1,3 @@
+solidDirectionMixedFvPatchVectorFieldS4F.C
+
+LIB = $(FOAM_USER_LIBBIN)/libSolidDirectionMixedFvPatchVectorFieldS4F

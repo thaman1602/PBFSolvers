@@ -1,0 +1,39 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     4.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      thermalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+	metalProperties
+	{
+		C		  1e8; 
+		kSCoeff		  (32 0 0); 
+		kLCoeff		  (32 0 0); 
+		cpSCoeff	  (381.5 0 0);
+		cpL		  381.5;
+		Tl		  303.23;
+		Ts                302.63;
+		Hf                8.016e4;
+		TVap		  1000;
+		betaM             1.20e-4;
+	}
+   
+	gasProperties
+	{
+		kG		  32;
+		cpG		  381.5;
+	}
+
+	TRef          	   TRef [ 0 0 0 1 0 0 0 ] 301.3;
+// ************************************************************************* //
