@@ -25,18 +25,22 @@ Application
     TResIntegrator
 
 Description
-    Utility to compute the TResIntegrator. Will be included in the solver later.
+    Utility to compute the TResIntegrator.
+
+    Procedure based on Schilling et al, Approach on simulation of
+    solidification and shrinkage of gravity cast salt cores, Simulation
+    Modelling Practice and Theory 107 (2021) 102231.
 
 Author
     Gowthaman Parivendhan, University College Dublin
-    Philip Cardiff, University College Dublin 
-    Tom Flint, The University of Manchester 
+    Philip Cardiff, University College Dublin
+    Tom Flint, The University of Manchester
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-//#include "PriorityList.H"
-#include "sort.H"
+#include "sortDynamicList.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 using namespace Foam;
 
@@ -47,15 +51,14 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
 
-
-    instantList Times = runTime.times();
+    instantList times = runTime.times();
 
     #include "createMesh.H"
 
-    if (Times.size())
+    if (times.size())
     {
-        label startTime = Times.size()-1;
-        runTime.setTime(Times[startTime], startTime);
+        const label startTime = times.size() - 1;
+        runTime.setTime(times[startTime], startTime);
     }
     else
     {
@@ -76,11 +79,11 @@ int main(int argc, char *argv[])
         dimensionedScalar("VGREAT", dimTemperature, -VGREAT),
         zeroGradientFvPatchScalarField::typeName
     );
-           
+
 
     Info<< "Time = " << runTime.timeName() << endl;
-        
-    volVectorField gradTSol
+
+    const volVectorField gradTSol
     (
         IOobject
         (
@@ -93,9 +96,9 @@ int main(int argc, char *argv[])
         mesh
     );
 
-    surfaceVectorField gradTSolf = fvc::interpolate(gradTSol);
-        
-    volScalarField solidificationTime
+    const surfaceVectorField gradTSolf(fvc::interpolate(gradTSol));
+
+    const volScalarField solidificationTime
     (
         IOobject
         (
@@ -110,20 +113,20 @@ int main(int argc, char *argv[])
 
     volScalarField meltRegions
     (
-     IOobject
-     (
-      "meltRegions",
-      runTime.timeName(),
-      mesh,
-      IOobject::NO_READ,
-      IOobject::AUTO_WRITE
-      ),
-     mesh,
-     dimensionedScalar("zero", dimless, 0),
-     zeroGradientFvPatchScalarField::typeName
-     );
+        IOobject
+        (
+            "meltRegions",
+            runTime.timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mesh,
+        dimensionedScalar("zero", dimless, 0),
+        zeroGradientFvPatchScalarField::typeName
+    );
 
-    volScalarField alphaM
+    const volScalarField alphaM
     (
         IOobject
         (
@@ -135,9 +138,12 @@ int main(int argc, char *argv[])
         ),
         mesh
     );
-   
-    scalarField& solidificationTimeI = solidificationTime.internalField();
-    Info<<"solidificationTime (min/max)"<<max(solidificationTime).value()<<", "<<min(solidificationTime).value()<<endl;
+
+    const scalarField& solidificationTimeI = solidificationTime.internalField();
+
+    Info<<"solidificationTime (min/max)"<< max(solidificationTime).value()
+        <<", "<<min(solidificationTime).value()<<endl;
+
     const volVectorField& C = mesh.C();
     const cellList& cells = mesh.cells();
 
@@ -147,78 +153,76 @@ int main(int argc, char *argv[])
     label cellCounter = 1;
     forAll(solidificationTime, cellI)
     {
-        if(solidificationTime[cellI]<SMALL)
+        if (solidificationTime[cellI] < SMALL)
         {
             meltRegions[cellI] = -1;
             resT[cellI] = 0.0;
-            //solidificationTime[cellI]=0.0;
             cellCounter++;
         }
     }
 
-    Info<<"Cell counter: "<<cellCounter<<endl;
-    /*bool listSwitch = true; //I'm not very creative in naming variables.
+    Info<< "Cell counter: " << cellCounter << endl;
 
-    while(listSwitch)
-    {
-        if(gMin(resT)<=-GREAT)
-        {
-            break;
-        }
-        }*/
-    //PriorityList<scalar> front(mesh.nCells());
     DynamicList<label> front;
-    /*forAll(solidificationTime, cellI)
-    {
-        front.set(cellI, -1);
-    }*/
 
-    while(gMax(meltRegions)>-1)
+    while (gMax(meltRegions) > -1)
     {
-        dimensionedScalar maxSolidificationTime = -GREAT; //gMax(solidificationTime);
-    
+        dimensionedScalar maxSolidificationTime = -GREAT;
+
         label hotCellID = -1;
         forAll(cells,cellI)
         {
-            if(meltRegions[cellI]>-1)
+            if (meltRegions[cellI] > -1)
             {
-                if(solidificationTime[cellI]>maxSolidificationTime.value())
+                if (solidificationTime[cellI] > maxSolidificationTime.value())
                 {
-                    maxSolidificationTime.value()=solidificationTime[cellI];
+                    maxSolidificationTime.value() = solidificationTime[cellI];
                     hotCellID = cellI;
                 }
             }
         }
-	    Info<<"maxSolidificationTime: "<<maxSolidificationTime<<endl;
+
+        Info<< "maxSolidificationTime: " << maxSolidificationTime << endl;
 
         front.append(hotCellID);
-    
+
         Info<< "Hottest Cell: " << hotCellID << endl;
 
         resT[hotCellID] = 0;
 
-        Info<<"SolTime hot cell: "<<solidificationTimeI[hotCellID]<<endl;
-        //front.updateWeight(hotCellID, solidificationTimeI[hotCellID]);
+        Info<<"SolTime hot cell: " << solidificationTimeI[hotCellID] << endl;
 
-        while(!front.empty())
-        {        
-            label cellIMax = front.remove(); //front.removeHead();
-            meltRegions[cellIMax]=-1;
+        while (!front.empty())
+        {
+            label cellIMax = front.remove();
+            meltRegions[cellIMax] = -1;
             const labelList& faces = cells[cellIMax];
-        
+
             forAll(faces, faceI)
             {
                 const label& face = faces[faceI];
-                if(face < mesh.nInternalFaces())
+                if (face < mesh.nInternalFaces())
                 {
                     const label cellI =
-                    owner[face] == cellIMax ? neighbour[face] : owner[face];
-                    
-                    if (resT[cellI] < -GREAT && solidificationTime[cellI] > SMALL)
+                        owner[face] == cellIMax ? neighbour[face] : owner[face];
+
+                    if
+                    (
+                        resT[cellI] < -GREAT
+                     && solidificationTime[cellI] > SMALL
+                    )
                     {
-                        scalar deltaT = mag((C[cellIMax] - C[cellI]) & gradTSolf[face]);
-              
-                        if(solidificationTime[cellIMax] >= solidificationTime[cellI])
+                        const scalar deltaT =
+                            mag
+                            (
+                                (C[cellIMax] - C[cellI]) & gradTSolf[face]
+                            );
+
+                        if
+                        (
+                            solidificationTime[cellIMax]
+                         >= solidificationTime[cellI]
+                        )
                         {
                             resT[cellI] = resT[cellIMax] - deltaT;
                         }
@@ -226,56 +230,53 @@ int main(int argc, char *argv[])
                         {
                             resT[cellI] = resT[cellIMax] + deltaT;
                         }
-                        //front.updateWeight(cellI, solidificationTime[cellI]);
                         front.append(cellI);
-                    
-                        if(front.size()>1)
+
+                        if (front.size() > 1)
                         {
-                            sort(front, solidificationTime);
+                            sortDynamicList(front, solidificationTime);
                         }
                     }
                 }
             }
         }
-
     }
 
-//#   include"interfaceSolidCells.H"
-
-    Info<<"resT (min/max)"<<min(resT).value()<<", "<<max(resT).value()<<endl;
+    Info<< "resT (min/max)" << min(resT).value() << ", " << max(resT).value() <<endl;
 
     forAll(mesh.C(), cellI)
     {
-        if((solidificationTime[cellI]<SMALL) && (resT[cellI]<-GREAT))
+        if
+        (
+            (solidificationTime[cellI] < SMALL)
+         && (resT[cellI] < -GREAT)
+        )
         {
-            resT[cellI]=0.0;
+            resT[cellI] = 0.0;
         }
     }
 
     resT.correctBoundaryConditions();
-    
-    scalar minResT = mag(min(resT).value());
+
+    const scalar minResT = mag(min(resT).value());
 
     forAll(mesh.C(), cellI)
     {
-        if((solidificationTime[cellI]>SMALL || resT[cellI]<0))
+        if (solidificationTime[cellI] > SMALL || resT[cellI] < 0)
         {
-            //resT[cellI] = -1.0*resT[cellI];
-            resT[cellI] = -1.0*(resT[cellI]+minResT);
+            resT[cellI] = -1.0*(resT[cellI] + minResT);
         }
     }
 
-//#   include"resTFieldSolidRegion.H"
     resT.correctBoundaryConditions();
 
-    Info<<"resT (min/max)"<<min(resT).value()<<", "<<max(resT).value()<<endl;
+    Info<< "resT (min/max)" << min(resT).value() << ", " << max(resT).value()
+        <<endl;
 
+    resT.write();
 
-    //normalFlag.write();
-	resT.write();
-    Info<<"End"<<endl;
-	Info<< endl;
-    
+    Info<< "End" << endl << endl;
+
     return 0;
 }
 
